@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties("nland.client")
+@ConfigurationProperties("api.client")
 @Data
 @ComponentScan
 public class NlandApiClientConfig {
@@ -18,7 +18,7 @@ public class NlandApiClientConfig {
     private String secretKey;
 
     @Bean
-    public NlandApiClient nlandClient() {
+    public NlandApiClient initApiClient() {
         return new NlandApiClient(accessKey, secretKey);
     }
 

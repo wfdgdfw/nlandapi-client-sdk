@@ -3,7 +3,6 @@ package com.weng.nlandapiclientsdk.client;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 
 
@@ -31,20 +30,26 @@ public class NlandApiClient {
 
     public String get(String url,HashMap<String,Object> paramMap) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-        return HttpUtil.get(url, paramMap);
+        String body = HttpRequest.get(url).addHeaders(getHeaderMap("")).form(paramMap).execute().body();
+        return body;
     }
 
-    public String post(String url,HashMap<String,Object> paramMap) {
+    public String get(String url) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-        String result = HttpUtil.post(url, paramMap);
-        return result;
+        String body = HttpRequest.get(url).addHeaders(getHeaderMap("")).execute().body();
+        return body;
+    }
+
+    public String postByMap(String url,HashMap<String,Object> paramMap) {
+        //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+//        String result = HttpUtil.post(url, paramMap);
+        String body = HttpRequest.post(url).form(paramMap).addHeaders(getHeaderMap("")).execute().body();
+        return body;
     }
 
     private Map<String, String> getHeaderMap(String body) {
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("accessKey", accessKey);
-        // 一定不能直接发送
-//        hashMap.put("secretKey", secretKey);
         hashMap.put("nonce", RandomUtil.randomNumbers(4));
         hashMap.put("body", body);
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
@@ -52,7 +57,7 @@ public class NlandApiClient {
         return hashMap;
     }
 
-    public String postByJson(String url, Object object) {
+    public String post(String url, Object object) {
         String json = JSONUtil.toJsonStr(object);
         HttpResponse httpResponse = HttpRequest.post(url)
                 .addHeaders(getHeaderMap(json))
