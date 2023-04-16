@@ -28,23 +28,19 @@ public class NlandApiClient {
         this.secretKey = secretKey;
     }
 
-    public String get(String url,HashMap<String,Object> paramMap) {
+    public String get(String requestPath,HashMap<String,Object> paramMap) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-        String body = HttpRequest.get(url).addHeaders(getHeaderMap("")).form(paramMap).execute().body();
-        return body;
+        return HttpRequest.get(CommonConstant.BASE_URL + requestPath).addHeaders(getHeaderMap("")).form(paramMap).execute().body();
     }
 
-    public String get(String url) {
+    public String get(String requestPath) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-        String body = HttpRequest.get(url).addHeaders(getHeaderMap("")).execute().body();
-        return body;
+        return HttpRequest.get(CommonConstant.BASE_URL + requestPath).addHeaders(getHeaderMap("")).execute().body();
     }
 
-    public String postByMap(String url,HashMap<String,Object> paramMap) {
+    public String postByMap(String requestPath,HashMap<String,Object> paramMap) {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-//        String result = HttpUtil.post(url, paramMap);
-        String body = HttpRequest.post(url).form(paramMap).addHeaders(getHeaderMap("")).execute().body();
-        return body;
+        return HttpRequest.post(CommonConstant.BASE_URL + requestPath).form(paramMap).addHeaders(getHeaderMap("")).execute().body();
     }
 
     private Map<String, String> getHeaderMap(String body) {
@@ -57,9 +53,15 @@ public class NlandApiClient {
         return hashMap;
     }
 
-    public String post(String url, Object object) {
+    /**
+     * post方法 + 请求体（json）
+     * @param requestPath
+     * @param object
+     * @return
+     */
+    public String post(String requestPath, Object object) {
         String json = JSONUtil.toJsonStr(object);
-        HttpResponse httpResponse = HttpRequest.post(url)
+        HttpResponse httpResponse = HttpRequest.post(CommonConstant.BASE_URL + requestPath)
                 .addHeaders(getHeaderMap(json))
                 .body(json)
                 .execute();

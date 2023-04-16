@@ -28,21 +28,34 @@ maven install
 ```yml
 api:
   client:
-    access-key: xxxxxx替换成自己的
-    secret-key: xxxxxx替换成自己的
+    # 测试key值
+    access-key: admin
+    secret-key: 12345678
 ```
 
 
 
 参考代码
 
+方法一 ：需配置application.yml
+
 ```java
 @Resource
 private NlandApiClient nlandApiClient;
-//post方法
-nlandApiClient.post("url",参数)
-//get方法
-nlandApiClient.post("url",参数)
+```
 
+方法二 ：无需配置application.yml
+
+```java
+NlandApiClient nlandApiClient = new NlandApiClient(accessKey,secretKey);
+```
+
+调用
+
+```java
+//post方法
+nlandApiClient.post("path",参数)
+//get方法
+nlandApiClient.get("path",参数)
 ```
 
